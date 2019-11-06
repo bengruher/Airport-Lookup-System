@@ -1,4 +1,3 @@
-//PlacesToAirport.x
 struct airports{
     string code<4>;
     string name<64>;

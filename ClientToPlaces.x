@@ -1,7 +1,3 @@
-//ClientToPlaces.x
-typedef struct places places;
-typedef struct city city;
-
 struct places {
 	string code<4>;
 	string name<64>;
@@ -24,3 +20,10 @@ union returnTypeC switch (int err){
     default:
         void;
 };
+
+/*IDL*/
+program CLIENT_TO_PLACES {
+    version CLIENT_TO_VERS {
+        returnTypeC CToP(city*) = 1;
+    } = 1;
+} = 0x27077077;
