@@ -1,8 +1,8 @@
 //PlacesToAirport.x
 struct airports{
-    char code[4];
-    char name[64];
-    char state[3];
+    string code<4>;
+    string name<64>;
+    string state<3>;
     double lat;
     double lon;
     double dist;

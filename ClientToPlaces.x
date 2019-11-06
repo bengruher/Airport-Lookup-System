@@ -3,9 +3,9 @@ typedef struct places places;
 typedef struct city city;
 
 struct places {
-	char code[4];
-	char name[64];
-	char state[3];
+	string code<4>;
+	string name<64>;
+	string state<3>;
 	double dist;
 	double lat;
 	double lon;
@@ -13,8 +13,8 @@ struct places {
 };
 
 struct city {
-	char state[3];
-	char city[64];
+	string state<3>;
+	string city<64>;
 };
 
 /*Union*/
