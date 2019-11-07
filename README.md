@@ -19,5 +19,3 @@ Instructions:
 ./ClientToPlaces_server "<filename.txt>"&
 3. Run Client
 ./ClientToPlaces_client localhost "<city>" <two letter state>
-OR
-./ClientToPlaces_client <ClientToPlaces_server host> "<city>" <two letter state>
