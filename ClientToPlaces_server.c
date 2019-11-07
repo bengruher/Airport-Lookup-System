@@ -5,15 +5,47 @@
  */
 
 #include "ClientToPlaces.h"
+#include <string>
+#include "trie.h"
+#include <stdio.h>
+using namespace std;
+
+#define MAXLINE 164
+static char* PLACES_FILE = "places50.txt";
+bool startup = true;
+
+void loadPlaces() {
+	FILE* fp;
+	char line[MAXLINE];
+	fp = fopen(PLACES_FILE, "r");
+	if (fp == NULL) {
+        printf("Could not open file %s", PLACES_FILE);
+    }
+
+	while (fgets(line, MAXLINE, fp) != NULL) {
+		// insert statements here
+	}
+
+    fclose(fp);
+}
 
 returnTypeC *
 ctop_1_svc(city *argp, struct svc_req *rqstp)
 {
 	static returnTypeC  result;
 
+	// load trie on startup
+	if(startup == true) {
+		loadPlaces();
+		startup = false;
+	}
+
 	/*
 	 * insert server code here
 	 */
+
+	//free mem for consecutive calls
+    xdr_free((xdrproc_t)xdr_returnTypeC, (char*)&result);
 
 	return &result;
 }
