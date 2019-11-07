@@ -15,4 +15,4 @@ Data Structures and algorithms to use:
 Instructions:
 1. Run PlacesToAirports server, use airport-locations.txt: ./PlacesToAirports_server "<filename.txt>"&
 2. Run ClientToPlaces server, use places2k.txt: ./ClientToPlaces_server "<filename.txt>"&
-3. Run Client: ./ClientToPlaces_client localhost "<city>" <two letter state>
+3. Run Client: ./ClientToPlaces_client localhost "<city>" <two letter state>.
