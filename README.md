@@ -18,4 +18,4 @@ Instructions:
 2. Run ClientToPlaces server, use places2k.txt: 
 ./ClientToPlaces_server "<filename.txt>"&
 3. Run Client: 
-./ClientToPlaces_client localhost "<city>" <two letter state>&
+./ClientToPlaces_client localhost "city" two letter state
