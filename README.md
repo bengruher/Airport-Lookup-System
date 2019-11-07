@@ -13,11 +13,11 @@ Data Structures and algorithms to use:
 4. spherical distance formula: Provided and is used to calculate the spherical distance between two points
 
 Instructions:
-Run PlacesToAirports server, use airport-locations.txt
-    ./PlacesToAirports_server "<filename.txt>"&
-Run ClientToPlaces server, use places2k.txt
-    ./ClientToPlaces_server "<filename.txt>"&
-Run Client
-    ./ClientToPlaces_client localhost "<city>" <two letter state>
+1. Run PlacesToAirports server, use airport-locations.txt
+./PlacesToAirports_server "<filename.txt>"&
+2. Run ClientToPlaces server, use places2k.txt
+./ClientToPlaces_server "<filename.txt>"&
+3. Run Client
+./ClientToPlaces_client localhost "<city>" <two letter state>
 OR
-    ./ClientToPlaces_client <ClientToPlaces_server host> "<city>" <two letter state>
+./ClientToPlaces_client <ClientToPlaces_server host> "<city>" <two letter state>
