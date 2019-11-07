@@ -13,13 +13,12 @@
 extern "C" {
 #endif
 
-extern char* places2k;
 
 struct places {
 	char code[4];
 	char name[64];
 	char state[3];
-	double dist;
+	int dist;
 	double lat;
 	double lon;
 	struct places *next;

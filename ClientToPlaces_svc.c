@@ -57,11 +57,13 @@ client_to_places_1(struct svc_req *rqstp, register SVCXPRT *transp)
 	return;
 }
 
+char* places2k;
+
 int
 main (int argc, char **argv)
 {
-	register SVCXPRT *transp;
-
+  register SVCXPRT *transp;
+  places2k = argv[1];
 	pmap_unset (CLIENT_TO_PLACES, CLIENT_TO_VERS);
 
 	transp = svcudp_create(RPC_ANYSOCK);

@@ -57,12 +57,11 @@ places_to_airport_1(struct svc_req *rqstp, register SVCXPRT *transp)
 	return;
 }
 
-char* fileName;
-
 int
 main (int argc, char **argv)
 {
   register SVCXPRT *transp;
+  char* fileName;
   fileName = argv[1];
 
 	pmap_unset (PLACES_TO_AIRPORT, PLACES_TO_VERS);

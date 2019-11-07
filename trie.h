@@ -1,19 +1,13 @@
 //Prefix Trie
-//CPSC 5520
-//HW4
+//CPSC 4520
+//HWTwo
 
 #ifndef TRIE_H
 #define TRIE_H
 #include <string>
 using namespace std;
 #define ALPHABET (255)
-//255 is excessive, however several cities have
-//accent marks and characters that don't fit neatly
-//on the alphabet. we use the length of the ascii 
-//table to ensure they dont get dropped. since the
-//server only runs once and is called by all clients
-//this is a drawback we are willing to take for better
-//usability
+//the alphabet is 26 letters and spaces
 
 struct node{
     struct node *children[ALPHABET];
@@ -25,8 +19,9 @@ struct node{
 
 class trie{
     private:
-	node *root;
+
     public:
+	node *root;
 	trie();
 	~trie();
 	struct node* newNode();
@@ -35,6 +30,7 @@ class trie{
 };
 
 #endif
+
 
 
 

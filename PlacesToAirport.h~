@@ -13,15 +13,14 @@
 extern "C" {
 #endif
 
-extern char* fileName;
 
 struct airports {
-	char code[4];
+	char code[3];
 	char name[64];
 	char state[3];
 	double lat;
 	double lon;
-	double dist;
+	int dist;
 	struct airports *next;
 };
 typedef struct airports airports;

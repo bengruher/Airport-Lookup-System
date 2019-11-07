@@ -10,11 +10,15 @@ xdr_airports (XDR *xdrs, airports *objp)
 {
 	register int32_t *buf;
 
-	 if (!xdr_string (xdrs, &objp->code, 4))
+	int i;
+	 if (!xdr_vector (xdrs, (char *)objp->code, 4,
+		sizeof (char), (xdrproc_t) xdr_char))
 		 return FALSE;
-	 if (!xdr_string (xdrs, &objp->name, 64))
+	 if (!xdr_vector (xdrs, (char *)objp->name, 64,
+		sizeof (char), (xdrproc_t) xdr_char))
 		 return FALSE;
-	 if (!xdr_string (xdrs, &objp->state, 3))
+	 if (!xdr_vector (xdrs, (char *)objp->state, 3,
+		sizeof (char), (xdrproc_t) xdr_char))
 		 return FALSE;
 	 if (!xdr_double (xdrs, &objp->lat))
 		 return FALSE;

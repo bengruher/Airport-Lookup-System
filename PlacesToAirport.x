@@ -1,7 +1,8 @@
+/*PlacesToAirport.x*/
 struct airports{
-    string code<4>;
-    string name<64>;
-    string state<3>;
+    char code[4];
+    char name[64];
+    char state[3];
     double lat;
     double lon;
     double dist;
@@ -26,4 +27,4 @@ program PLACES_TO_AIRPORT {
     version PLACES_TO_VERS {
         returnTypeA PToA(LatLon*) = 1;
     } = 1;
-} = 0x28088088;
+} = 0x20755215;

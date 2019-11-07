@@ -1,6 +1,6 @@
 //Prefix Trie
-//CPSC 5520
-//HW4
+//CPSC 4520
+//HWTwo
 
 
 #include "trie.h"
@@ -32,7 +32,12 @@ trie::~trie(){
 struct node* trie::newNode(){
     struct node *currNode = new node();
     
-    //initialize all to null
+    //allocate memory for the node. not sure how malloc works
+    //so check this.
+    
+    
+    //if memory allocates correctly, initialize all to null
+
     currNode->count = 0;
     currNode->isLeaf = false;
     currNode->longitude = 0;
@@ -40,10 +45,12 @@ struct node* trie::newNode(){
     for(int i = 0; i < ALPHABET; i++){
         currNode->children[i] = NULL;
     }
+
+
     return currNode;
 }
 
-
+//(const char?) for safety
 void trie::insert(string key, double inLongitude, double inLatitude){
     int depth;
     int keyLength = key.length();
@@ -56,9 +63,13 @@ void trie::insert(string key, double inLongitude, double inLatitude){
     struct node *currNode = root;
 
     for(depth = 0; depth < keyLength; depth++){
-	//find the index for the array of pointers by pulling
-	//the char from key that is at the current depth of
-	//the tree
+	/*if(key[depth] == ' '){
+	    index = 26;
+	}
+	else{
+	    index = key[depth] - 'a'; 
+	}
+	*/
 	index = key[depth];
 	if(currNode->children[index] == NULL){
 	    currNode->children[index] = newNode();
@@ -73,6 +84,7 @@ void trie::insert(string key, double inLongitude, double inLatitude){
     currNode->latitude = inLatitude;
 }
 
+//for now only returns true if key is found
 struct node* trie::search(string key){
     int depth;
     int keyLength = key.length();
@@ -81,13 +93,21 @@ struct node* trie::search(string key){
     struct node *currNode = root;
 
     for(depth = 0; depth < keyLength; depth++){
-	//find index same as insert above
+	/*if(key[depth] == ' '){
+	    index = 26;
+	}
+	else{
+	    index = key[depth] - 'a';
+	}
+	*/
 	index = key[depth];
 	if(!currNode->children[index]){
 	    return NULL;
 	}
+
 	currNode = currNode->children[index];
     }
+    
     //if its a leaf, return the node
     if (currNode->isLeaf == true){
 	return currNode;
@@ -108,5 +128,6 @@ struct node* trie::search(string key){
 	return currNode;
     }
 }
+
 
 

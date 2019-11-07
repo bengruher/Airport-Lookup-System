@@ -3,7 +3,7 @@
  * It was generated using rpcgen.
  */
 
-#include "PlacesToAirport.h"
+#include "ClientToPlaces.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <rpc/pmap_clnt.h>
@@ -17,10 +17,10 @@
 #endif
 
 static void
-places_to_airport_1(struct svc_req *rqstp, register SVCXPRT *transp)
+client_to_places_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
 	union {
-		LatLon ptoa_1_arg;
+		city ctop_1_arg;
 	} argument;
 	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
@@ -31,10 +31,10 @@ places_to_airport_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		(void) svc_sendreply (transp, (xdrproc_t) xdr_void, (char *)NULL);
 		return;
 
-	case PToA:
-		_xdr_argument = (xdrproc_t) xdr_LatLon;
-		_xdr_result = (xdrproc_t) xdr_returnTypeA;
-		local = (char *(*)(char *, struct svc_req *)) ptoa_1_svc;
+	case CToP:
+		_xdr_argument = (xdrproc_t) xdr_city;
+		_xdr_result = (xdrproc_t) xdr_returnTypeC;
+		local = (char *(*)(char *, struct svc_req *)) ctop_1_svc;
 		break;
 
 	default:
@@ -57,23 +57,20 @@ places_to_airport_1(struct svc_req *rqstp, register SVCXPRT *transp)
 	return;
 }
 
-char* fileName;
-
 int
 main (int argc, char **argv)
 {
-  register SVCXPRT *transp;
-  fileName = argv[1];
+	register SVCXPRT *transp;
 
-	pmap_unset (PLACES_TO_AIRPORT, PLACES_TO_VERS);
+	pmap_unset (CLIENT_TO_PLACES, CLIENT_TO_VERS);
 
 	transp = svcudp_create(RPC_ANYSOCK);
 	if (transp == NULL) {
 		fprintf (stderr, "%s", "cannot create udp service.");
 		exit(1);
 	}
-	if (!svc_register(transp, PLACES_TO_AIRPORT, PLACES_TO_VERS, places_to_airport_1, IPPROTO_UDP)) {
-		fprintf (stderr, "%s", "unable to register (PLACES_TO_AIRPORT, PLACES_TO_VERS, udp).");
+	if (!svc_register(transp, CLIENT_TO_PLACES, CLIENT_TO_VERS, client_to_places_1, IPPROTO_UDP)) {
+		fprintf (stderr, "%s", "unable to register (CLIENT_TO_PLACES, CLIENT_TO_VERS, udp).");
 		exit(1);
 	}
 
@@ -82,8 +79,8 @@ main (int argc, char **argv)
 		fprintf (stderr, "%s", "cannot create tcp service.");
 		exit(1);
 	}
-	if (!svc_register(transp, PLACES_TO_AIRPORT, PLACES_TO_VERS, places_to_airport_1, IPPROTO_TCP)) {
-		fprintf (stderr, "%s", "unable to register (PLACES_TO_AIRPORT, PLACES_TO_VERS, tcp).");
+	if (!svc_register(transp, CLIENT_TO_PLACES, CLIENT_TO_VERS, client_to_places_1, IPPROTO_TCP)) {
+		fprintf (stderr, "%s", "unable to register (CLIENT_TO_PLACES, CLIENT_TO_VERS, tcp).");
 		exit(1);
 	}
 

@@ -6,6 +6,7 @@
 
 #include "ClientToPlaces.h"
 
+
 void client_to_places_1(char *host, char* returnCity, char* state)
 {
 	CLIENT *clnt;
@@ -20,30 +21,31 @@ void client_to_places_1(char *host, char* returnCity, char* state)
 		exit (1);
 	}
 #endif	/* DEBUG */
-    strcpy(ctop_1_arg.city, returnCity);
-    strcpy(ctop_1_arg.state, state);
+    //strcpy(ctop_1_arg.city, returnCity);
+    //strcpy(ctop_1_arg.state, state);
 	result_1 = ctop_1(&ctop_1_arg, clnt);
 	if (result_1 == (returnTypeC *) NULL) {
 		clnt_perror (clnt, "call failed");
 	}
 
     airportList = &result_1->returnTypeC_u.resultC;
-    
-    if(strcmp((*airportList)->name,"FAILED") == 0){
-	printf("%s  \n", "Please be more specific or use a different city!");
+    printf("%s  \n", (*airportList)->name);
+    printf("%s  \n", (*airportList)->code);
+    printf("%s  \n", (*airportList)->state);
+    printf("%g  \n", (*airportList)->dist);
+    printf("%g  \n", (*airportList)->lat);
+    printf("%g  \n", (*airportList)->lon);
+    (*airportList) = (*airportList)->next;
+    for(int i = 0; i < 5; i++){
+      printf("%s  \n", (*airportList)->name);
+      printf("%s  \n", (*airportList)->code);
+      printf("%s  \n", (*airportList)->state);
+      printf("%g  \n", (*airportList)->dist);
+      printf("%g  \n", (*airportList)->lat);
+      printf("%g  \n", (*airportList)->lon);
+      (*airportList) = (*airportList)->next;
     }
-    else{
-	printf("%s, %s, %f, %f\n", (*airportList)->name, (*airportList)->state , (*airportList)->lat, (*airportList)->lon);
-	(*airportList) = (*airportList)->next;
     
-        for(int i = 0; i < 5; i++){
-		printf("%s, %s, %s, %f\n", (*airportList)->name, (*airportList)->state, (*airportList)->code, (*airportList)->dist);
-		(*airportList) = (*airportList)->next;
-	}
-    }
-
-    clnt_freeres(clnt, (xdrproc_t)xdr_returnTypeC, (char *)result_1);
-
 #ifndef	DEBUG
 	clnt_destroy (clnt);
 #endif	 /* DEBUG */
