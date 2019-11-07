@@ -13,6 +13,7 @@ void client_to_places_1(char *host, char* returnCity, char* state)
 	city  ctop_1_arg;
     places** airportList;
 
+	// get client for places server
 #ifndef	DEBUG
 	clnt = clnt_create (host, CLIENT_TO_PLACES, CLIENT_TO_VERS, "udp");
 	if (clnt == NULL) {
@@ -29,19 +30,24 @@ void client_to_places_1(char *host, char* returnCity, char* state)
 
     airportList = &result_1->returnTypeC_u.resultC;
     
-    if(strcmp((*airportList)->name,"FAILED") == 0){
-	printf("%s  \n", "Please be more specific or use a different city!");
+	// error case: invalid city name
+    if(strcmp((*airportList)->name,"FAILED") == 0) {
+		printf("%s  \n", "Please be more specific or use a different city!");
     }
+	// print linked list of closest airports
     else{
-	printf("%s, %s, %f, %f\n", (*airportList)->name, (*airportList)->state , (*airportList)->lat, (*airportList)->lon);
-	(*airportList) = (*airportList)->next;
-    
-        for(int i = 0; i < 5; i++){
-		printf("%s, %s, %s, %f\n", (*airportList)->name, (*airportList)->state, (*airportList)->code, (*airportList)->dist);
+		printf("*********************Location*****************************\n");
+		printf("%s, %s, %f, %f\n", (*airportList)->name, (*airportList)->state , (*airportList)->lat, (*airportList)->lon);
 		(*airportList) = (*airportList)->next;
-	}
+    
+		printf("*********************Closest Airports*********************\n");
+        for(int i = 0; i < 5; i++){
+			printf("%s, %s, %s, %f\n", (*airportList)->name, (*airportList)->state, (*airportList)->code, (*airportList)->dist);
+			(*airportList) = (*airportList)->next;
+		}
     }
 
+	// clear client memory
     clnt_freeres(clnt, (xdrproc_t)xdr_returnTypeC, (char *)result_1);
 
 #ifndef	DEBUG

@@ -9,76 +9,79 @@
 #include "trie.h"
 #include <string.h>
 #include <iostream>
-#include <locale>
 #include <stdio.h>
 using namespace std;
 
+#define MAX_LINE_LENGTH 167          // total length of each line in text file (added three characters for safety)
+#define START_STATE 0                // start index of state abbreviation in text file
+#define END_STATE 2                  // end index of state abbreviation in text file
+#define START_CITY 9                 // start index of city name in text file
+#define END_CITY 63                  // end index of city name in text file
+#define LONG_SIZE 10                 // length of longitude field in text file
+#define LONG_START 153               // start index of longitude in text file
+#define LAT_SIZE 9                   // length of lattitude field in text file
+#define LAT_START 144                // start index of lattitude in text file
+#define NUM_AIRPORTS 5               // number of airports sent back to client
+#define CITY_SIZE 63                 // size of the name of the city
+#define CODE_SIZE 3                  // size of airport code
+#define STATE_SIZE 2                 // size of state abbreviation
 
-bool start = false;
-trie* cityTrie;
+bool startup = true;
+trie* cities;
 
-void buildTree(){
-    cityTrie = new trie();
+void buildTree() {
+    cities = new trie();
 
-    FILE *inFile;
-    //inFile = fopen(places2k, "r");
-    inFile = fopen("places2k.txt", "r");
-    char line[167];
+    // open provided file
+    FILE *placesFile;
+    placesFile = fopen(places2k, "r");
+    char line[MAX_LINE_LENGTH];            // stores each line of input file     
     string state;
     string city;
     string place;
     double longitude;
-    double latitude;
-    //char stateCity[68];
+    double latitude;    
     
-    
-    while(fgets(line, 167, inFile) != NULL){
-	string location(line);
-        state = location.substr(0,2);
-        city = location.substr(9, 63);
+    // get each line from file and store in char array line
+    while(fgets(line, MAX_LINE_LENGTH, placesFile) != NULL){
+	    string location(line);
+        state = location.substr(START_STATE, END_STATE);
+        city = location.substr(START_CITY, END_CITY);
 	
         place.append(state);
         place.append(city);
-    
-	
-	locale loc;
-	for(string::size_type i = 0; i < place.length(); i++){
-	    place[i] = tolower(place[i],loc);
-	}
-        
-	printf("%s  \n", place.c_str());
+    	
+        for(int i = 0; i < place.length(); i++){
+            place[i] = tolower(place[i]);
+        }
+            
+        printf("%s  \n", place.c_str());
 
-	string lonStr = location.substr(153,10); //was 7
-	string latStr = location.substr(144,9); // was 5
+        string lonStr = location.substr(LONG_START, LONG_SIZE); 
+        string latStr = location.substr(LAT_START, LAT_SIZE);
 
-	longitude = stod(lonStr);
+        longitude = stod(lonStr);
         latitude = stod(latStr);
-        //strcpy(stateCity, place.c_str());
-        
-	cityTrie->insert(place, longitude, latitude);
-	place.clear();
+            
+        cities->insert(place, longitude, latitude);
+        place.clear();
     }
     
-    fclose(inFile);
+    fclose(placesFile);
 }
 
 
 returnTypeC *
 ctop_1_svc(city *argp, struct svc_req *rqstp)
 {
-     
     //build tree on first run 
-    if(!start){
-	buildTree();
-	start = true;
+    if(startup){
+        buildTree();
+        startup = false;
     }
      
-
     static returnTypeC  result;
 
-	/*
-	 * insert server code here
-	 */
     CLIENT* clnt;
     returnTypeA *result_1;
     LatLon ptoa_1_arg;
@@ -86,36 +89,38 @@ ctop_1_svc(city *argp, struct svc_req *rqstp)
     airports** airportList;
     places** listWrite;
 
+    // free memory for consective calls
     xdr_free((xdrproc_t)xdr_returnTypeC, (char*)&result);
     
-    //search tree here
-    
-    string searchStr;
-    string stateStr(argp->state);
-    string cityStr(argp->city);
-    searchStr.append(stateStr);
-    searchStr.append(cityStr);
+    // build key used to search trie (key = state + city)
+    string userInput;
+    userInput.append(argp->state);
+    userInput.append(argp->city);
 
-    locale loc;
-    for(string::size_type i = 0; i < searchStr.length(); i++){
-        searchStr[i] = tolower(searchStr[i],loc);
+    // make all letters of input string lowercase
+    for(int i = 0; i < userInput.length(); i++){
+        userInput[i] = tolower(userInput[i]);
     }
         
+    // search trie for city
     struct node* place;
-    place = cityTrie->search(searchStr); 
+    place = cities->search(userInput); 
 
-    if(place == NULL){
-	printf("%s  \n", "FAILED");
-	listWrite = &result.returnTypeC_u.resultC;
-	(*listWrite) = new places();
-	strncpy((*listWrite)->name, "FAILED", 63);
-	return &result;
+    // error case: place not found
+    if(place == NULL) {
+        printf("%s  \n", "FAILED");
+        listWrite = &result.returnTypeC_u.resultC;
+        (*listWrite) = new places();
+        strncpy((*listWrite)->name, "FAILED", CITY_SIZE);
+        return &result;
     }
-    else{
-	ptoa_1_arg.lon = place->longitude;
-	ptoa_1_arg.lat = place->latitude;
-    }//if found fill args
+    // found place, fill longitute and latitude information
+    else {
+        ptoa_1_arg.lon = place->longitude;
+        ptoa_1_arg.lat = place->latitude;
+    }
 
+    // create client to communicate with airport server
 #ifndef DEBUG
     clnt = clnt_create (host, PLACES_TO_AIRPORT, PLACES_TO_VERS, "udp");
     if (clnt == NULL) {
@@ -124,7 +129,7 @@ ctop_1_svc(city *argp, struct svc_req *rqstp)
     }
 #endif  /* DEBUG */
    
-
+    // contact airport server
     result_1 = ptoa_1(&ptoa_1_arg, clnt);
     if (result_1 == (returnTypeA *) NULL) {
       clnt_perror (clnt, "call failed");
@@ -133,33 +138,37 @@ ctop_1_svc(city *argp, struct svc_req *rqstp)
     airportList = &result_1->returnTypeA_u.resultA;
     listWrite = &result.returnTypeC_u.resultC;
     
-    for(int i = 0; i < 6; i++){
+    // build linked list to return to client from result_1 (returned from airport server)
+    for(int i = 0; i <= NUM_AIRPORTS; i++) {
+        // get airport from airport list and assign it to place
 		places* p = new places();
-		strncpy(p->name, (*airportList)->name, 63);
-		strncpy(p->code, (*airportList)->code, 3);
-		strncpy(p->state, (*airportList)->state, 2);
+		strncpy(p->name, (*airportList)->name, CITY_SIZE);
+		strncpy(p->code, (*airportList)->code, CODE_SIZE);
+		strncpy(p->state, (*airportList)->state, STATE_SIZE);
 		p->lat = (*airportList)->lat;
 		p->lon = (*airportList)->lon;
 		p->dist = (*airportList)->dist;
+
 		places* temp = (*listWrite);
-		if(temp == NULL){
-			strncpy(p->name, argp->city, 63);
-			strncpy(p->state, argp->state, 2);
+		if(temp == NULL) {
+			strncpy(p->name, argp->city, CITY_SIZE);
+			strncpy(p->state, argp->state, STATE_SIZE);
 			p->lat = place->latitude;
 			p->lon = place->longitude;
 			(*listWrite) = p;
 		}
 		else{
+            // find tail
 			while(temp->next){
 				temp = temp->next;
 			}
 			temp->next = p;
 		}
+        // advance to next node
 		(*airportList) = (*airportList)->next;
 	}
-    //delete place;
-    //delete listWrite;
-    //delete airportList;
+
+    // free client
     clnt_freeres(clnt, (xdrproc_t) xdr_returnTypeA, (char *)&result_1);
     return &result;
 }

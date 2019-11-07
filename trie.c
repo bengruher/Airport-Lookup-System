@@ -1,6 +1,6 @@
 //Prefix Trie
 //CPSC 4520
-//HWTwo
+//HW4
 
 
 #include "trie.h"

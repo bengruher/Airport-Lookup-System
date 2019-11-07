@@ -1,6 +1,6 @@
 //Prefix Trie
 //CPSC 4520
-//HWTwo
+//HW4
 
 #ifndef TRIE_H
 #define TRIE_H
@@ -9,7 +9,7 @@ using namespace std;
 #define ALPHABET (255)
 //the alphabet is 26 letters and spaces
 
-struct node{
+struct node {
     struct node *children[ALPHABET];
     int count;
     double longitude;

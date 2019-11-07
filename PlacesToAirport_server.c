@@ -3,9 +3,7 @@
  * These are only templates and you can use them
  * as a guideline for developing your own functions.
  */
-//Name: Rueben, Hunter, Charlie, Asa
-//Last modified: 8:23pm
-//Vers: 13
+
 #include "PlacesToAirport.h"
 #include "kdtree.c"
 #include "distance.c"
