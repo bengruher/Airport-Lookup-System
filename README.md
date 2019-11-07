@@ -11,3 +11,13 @@ Data Structures and algorithms to use:
 2. KNN algorithm: This algorithm is used to improve performance by finding the 5 nearest neighbor to a point on a 2D KD Tree.
 3. Prefix tree: Used to optimize the search from the client’s query. (Looks through places2k.txt)
 4. spherical distance formula: Provided and is used to calculate the spherical distance between two points
+
+Instructions:
+Run PlacesToAirports server, use airport-locations.txt
+    ./PlacesToAirports_server "<filename.txt>"&
+Run ClientToPlaces server, use places2k.txt
+    ./ClientToPlaces_server "<filename.txt>"&
+Run Client
+    ./ClientToPlaces_client localhost "<city>" <two letter state>
+    OR
+    ./ClientToPlaces_client <ClientToPlaces_server host> "<city>" <two letter state>
