@@ -19,5 +19,5 @@ Run ClientToPlaces server, use places2k.txt
     ./ClientToPlaces_server "<filename.txt>"&
 Run Client
     ./ClientToPlaces_client localhost "<city>" <two letter state>
-    OR
+OR
     ./ClientToPlaces_client <ClientToPlaces_server host> "<city>" <two letter state>
